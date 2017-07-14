@@ -1,0 +1,20 @@
+gui:
+  image: consol/ubuntu-xfce-vnc
+  ports:
+    - "5901:5901/tcp"
+  environment:
+#     - VNC_RESOLUTION=2560x1440
+     - VNC_RESOLUTION=1920x1080
+     - SSH_AUTH_SOCK=/tmp/ssh-agent
+  cap_add:
+    - NET_ADMIN
+  volumes:
+    - $SSH_AUTH_SOCK:/tmp/ssh-agent
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /tmp/.X11-unix/:/tmp/.X11-unix
+phpstorm:
+  image: iainmckay/phpstorm:2017.1-php7
+  environment:
+    - DISPLAY=:1.0
+  volumes_from:
+    - gui
