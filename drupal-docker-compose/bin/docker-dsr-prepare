@@ -1,0 +1,16 @@
+BRANCH=$1
+BRANCH_LC=${BRANCH,,}
+BRANCH_UC=${BRANCH^^}
+DIR="dsr.${BRANCH_LC}"
+SOURCE_DIR=dsr.dev
+#PROFILE_REMOTE_URL=$(sed -n 's/projects\[dsr\]\[download\]\[url\] =\(.*\)/\1/p')
+
+git clone git@githost:/data/git/drupal/dsr/platform.git $DIR \
+&& echo "projects[dsr][download][branch] = '${BRANCH}'" >> $DIR/platform.make \
+&& mkdir -p $DIR/htdocs/sites/default \
+&& cp -r $SOURCE_DIR/htdocs/sites/default/settings.php $DIR/htdocs/sites/default/ \
+&& cp -r $SOURCE_DIR/db-dumps $DIR/ \
+&& cp -r $SOURCE_DIR/.idea $DIR/ \
+&& mv $DIR/.idea/PROJECT.iml $DIR/.idea/$DIR.iml \
+&& sed -i "s/PROJECT\.iml/${DIR}.iml/g" $DIR/.idea/modules.xml
+cd $DIR && ./build.sh

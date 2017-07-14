@@ -1,0 +1,59 @@
+version: '2'
+services:
+  solr01:
+    image: mparker17/solr-search-api-solr
+    ports:
+      - 8985:8983
+    volumes:
+      - ./.docker/solr:/opt/solr-4.10.4/example
+  mc01:
+    image: memcached
+  db01Data:
+    image: tianon/true
+  db01:
+    image: mariadb:10
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_DATABASE: drupal
+      MYSQL_ROOT_PASSWORD: 'drupal'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes_from:
+      - db01Data
+    volumes:
+          - './docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+  app01:
+    image: adaptdk/docker-library-drupal:d8
+    working_dir: /var/www/html
+    ports:
+      - 8080:80
+    links:
+      - db01:db
+      - mc01:memcache
+      - solr01:solr01
+    volumes:
+      - ./.docker/conf/php.override.ini:/usr/local/etc/php/conf.d/php.override.ini
+    volumes_from:
+      - app01Data
+  app01Data:
+    image: tianon/true
+  drush:
+    image: drush/drush:8-php5-alpine
+    working_dir: /var/www/html
+    links:
+      - db01
+      - mc01
+    volumes_from:
+      - app01Data
+  console:
+    image: drupalconsole
+    working_dir: /var/www
+    command: bash
+    extra_hosts:
+      - "interflora.dk.loc:169.254.0.1"
+    volumes:
+      - ./:/var/www
+volumes:
+  db01Data:

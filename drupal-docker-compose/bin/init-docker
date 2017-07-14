@@ -1,0 +1,50 @@
+#!/bin/bash
+PS3="Select drupal version you wish to use:"
+options=("Drupal 7" "Drupal 8" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Drupal 7")
+            echo Drupal 7
+            scriptVersion=d7
+            break
+            ;;
+        "Drupal 8")
+            echo Drupal 8
+            scriptVersion=d8
+            break
+            ;;
+        "Quit")
+            break
+            ;;
+        *) echo No version selected;;
+    esac
+done
+if [ -n "$scriptVersion" ]; then
+    echo "Creating drupal $scriptVersion setup."
+    directory=$(pwd)
+    sourceDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    ln -s "$sourceDir/../$scriptVersion/docker-compose.yml" "$directory/docker-compose.yml"
+    if [ $scriptVersion == "d8" ]; then
+        if [ ! -f "$directory/docker-sync.yml" ]
+        then
+            echo "Symlinking sync and compose dev to project."
+            cp "$sourceDir/../$scriptVersion/docker-compose-dev.yml" "$directory/docker-compose-dev.yml"
+            cp "$sourceDir/../$scriptVersion/docker-sync.yml" "$directory/docker-sync.yml"
+            echo "Modify your docker-sync.yml and docker-compose-dev.yml, and replace [your-site] with your project name."
+        else
+            echo "docker-compose-dev and docker-sync already exists."
+        fi
+        if [ ! -d "$directory/html" ]
+        then
+            if [ ! -d "$directory/html" ]
+            then
+                mv "$directory/web" "$directory/html"
+            elif [ ! -d "$directory/htdocs" ]
+            then
+                mv "$directory/htdocs" "$directory/html"
+            fi
+        fi
+    fi
+    echo "Start your site with: docker-sync-stack start"
+fi

@@ -1,0 +1,5 @@
+docker-stop-checkout
+docker-start-checkout
+docker-dsr-db-trunc-import
+docker-drush-updbfra
+docker-drush-devify

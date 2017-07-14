@@ -1,0 +1,5 @@
+#!/bin/bash
+
+docker-start-checkout && sleep 5 && docker-dsr-db-trunc-import && sleep 5 && docker-drush-updbfra
+docker-drush-devify && sudo chmod -R 777 htdocs/sites/default/files
+

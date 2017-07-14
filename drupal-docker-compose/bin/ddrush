@@ -1,0 +1,3 @@
+source docker_drush_path.sh
+docker exec -i -t server $DDRUSH "$@" 
+

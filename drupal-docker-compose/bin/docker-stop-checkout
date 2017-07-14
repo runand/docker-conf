@@ -1,0 +1,2 @@
+docker stop server database memcache-host solr-host
+docker rm `docker ps -aq`

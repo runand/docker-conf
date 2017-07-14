@@ -1,0 +1,2 @@
+source docker_drush_path.sh
+docker exec -t server $DDRUSH uli "$@" --uri=http://localhost:8080

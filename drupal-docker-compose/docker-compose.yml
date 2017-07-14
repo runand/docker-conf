@@ -1,0 +1,30 @@
+version: '2'
+services:
+  solr-search_api_solr:
+    image: mparker17/solr-search-api-solr
+  memcached:
+    image: memcached
+  mysql:
+    image: mysql
+    # Environment variables
+#    environment:
+#      MYSQL_USER: adaptadmin
+#      MYSQL_PASSWORD: root
+#      MYSQL_DATABASE: drupal
+#      MYSQL_ROOT_PASSWORD: ''
+#      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  drupal7:
+    image: adaptdk/docker-library-drupal:d7
+    links:
+      - mysql:mysql
+      - memcached:memcached
+      - solr-search_api_solr:solr
+#  drupal8:
+#    image: adaptdk/docker-library-drupal:d8
+#    ports:
+      # Host machine's port 8000 will map to Drupal's port 80
+#      - "8000:80"
+#    links:
+#      - mysql:mysql
+#      - memcached:memcached
+#      - solr-search_api_solr:solr

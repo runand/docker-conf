@@ -1,0 +1,4 @@
+source docker_drush_path.sh
+
+docker exec -t server $DDRUSH updb -y
+docker exec -t server $DDRUSH fra -y

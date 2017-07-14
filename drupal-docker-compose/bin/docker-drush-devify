@@ -1,0 +1,14 @@
+source docker_drush_path.sh
+docker exec -t server $DDRUSH en -y devel
+docker exec -t server $DDRUSH en -y stage_file_proxy
+docker exec -t server $DDRUSH en -y views_ui
+docker exec -t server $DDRUSH en -y field_ui
+#docker exec -t server $DDRUSH en -y dsr_dev
+#docker exec -t server $DDRUSH dl -y search_api_solr_overrides
+#docker exec -t server $DDRUSH en -y search_api_solr_overrides
+
+ddrush sqlq "update search_api_server set options = 'a:16:{s:9:\"clean_ids\";b:1;s:9:\"site_hash\";b:1;s:6:\"scheme\";s:4:\"http\";s:4:\"host\";s:6:\"solr01\";s:4:\"port\";s:4:\"8983\";s:4:\"path\";s:17:\"/solr/collection1\";s:9:\"http_user\";s:9:\"siteadmin\";s:9:\"http_pass\";s:4:\"pass\";s:7:\"excerpt\";i:0;s:13:\"retrieve_data\";i:0;s:14:\"highlight_data\";i:0;s:17:\"skip_schema_check\";i:0;s:12:\"solr_version\";s:0:\"\";s:11:\"http_method\";s:4:\"AUTO\";s:17:\"autocorrect_spell\";i:1;s:25:\"autocorrect_suggest_words\";i:1;}' where machine_name = 'solr';"
+
+ddrush cc drush
+
+#ddrush mi eventlocations; ddrush mi event
